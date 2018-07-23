@@ -99,6 +99,8 @@ def train(**kwargs):
 
     if opt.use_cuda:
         trainer = trainer.cuda()
+        if opt.use_horovod:
+            hvd.broadcast_parameters(trainer.state_dict(), root_rank=0)
 
     if opt.load_path:
         old_state = trainer.load(opt.load_path)
