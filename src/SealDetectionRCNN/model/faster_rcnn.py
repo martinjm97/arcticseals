@@ -10,6 +10,7 @@ from torch import nn
 from data.dataset import preprocess
 from torch.nn import functional as F
 from utils.config import opt
+import horovod.torch as hvd
 
 
 class FasterRCNN(nn.Module):
@@ -283,6 +284,9 @@ class FasterRCNN(nn.Module):
             self.optimizer = t.optim.Adam(params)
         else:
             self.optimizer = t.optim.SGD(params, momentum=0.9)
+        if opt.use_horovod:
+            # TODO: maybe add some named parameters
+            self.optimizer = hvd.DistributedOptimizer(self.optimizer)
         return self.optimizer
 
     def set_lr(self, new_lr):

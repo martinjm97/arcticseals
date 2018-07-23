@@ -18,7 +18,11 @@ from utils.vis_tool import visdom_bbox
 from utils.eval_tool import eval_detection_voc
 import torch.utils.data
 import torch
-torch.set_num_threads(1)
+import horovod.torch as hvd
+hvd.init()
+torch.cuda.set_device(hvd.local_rank())
+
+# torch.set_num_threads(1)
 
 # fix for ulimit
 # https://github.com/pytorch/pytorch/issues/973#issuecomment-346405667

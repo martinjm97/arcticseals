@@ -48,6 +48,7 @@ class Config:
 
     # not fully implemented yet
     use_cuda = True
+    use_horovod = True # use horovod for distributed training 
     use_adam = False # Use Adam optimizer
     use_chainer = False # try match everything as chainer
     use_drop = False # use dropout in RoIHead
