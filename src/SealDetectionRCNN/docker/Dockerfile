@@ -1,4 +1,4 @@
-FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+FROM uber/horovod:0.13.10-tf1.9.0-torch0.4.0-py3.5
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
          build-essential \
