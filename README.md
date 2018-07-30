@@ -2,14 +2,14 @@
 
 This is the workspace for the Microsoft 2018 OneWeek Hackathon project [Find Arctic Seals with Deep Learning](https://garagehackbox.azurewebsites.net/hackathons/1214/projects/70402). Other background materials (presentations, etc.) can be found in our [Arctic Seals Hackathon Team](https://teams.microsoft.com/l/team/19%3adfaf4e05a29741fe8a2dc3cf8d0c8f57%40thread.skype/conversations?groupId=6cbb37ab-68c8-408e-9e7e-a3a87706dfe5&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47).
 
-To get write access to this repo, submit a request [here](https://github.com/orgs/Microsoft/teams/arcticseals/members) (note that you must already be signed into GitHub with a 2FA-enabled account, otherwise you'll just get a 404).
+To get write access to this repo, submit a request [here](https://github.com/orgs/Microsoft/teams/arcticseals/members).
 
 ## Data
 
 The `data` directory contains the following dataset files from NOAA: 
 
-* `training.csv` (6,624 records): Hotspot detection data for which we have all corresponding imagery data (see below). Currently all of these hotspots refer to images in dataset ArcticSealsData01. Can be used for training and hyperparameter tuning (see `parse-labels` in the `scripts` directory to make it easy to split off a dev set).
-* `validation.csv` (272 records): Reserved for final validation and should **not** be used for training or tuning.
+* `train.csv` (5,256 records): Hotspot detection data for which we have all corresponding imagery data (see below). Currently all of these hotspots refer to images in dataset ArcticSealsData01.
+* `test.csv` (1,368 records): Same format and distrbution of `train.csv`, suitable for cross-validation. 
 
 Each record in the CSV files refers to a hotspot that the NOAA thermal detection system picked up and that was classified by a human into either "Animal" (true positive) or "Anomaly" (false positive). Each hotspot is unique (no duplicates). The column schema is as follows:
 
@@ -19,13 +19,13 @@ Each record in the CSV files refers to a hotspot that the NOAA thermal detection
 * `filt_thermal8`: Filename of the 8-bit JPG containing the annotated FLIR image data (hotspots circled)
 * `filt_color`: Filename of the 8-bit JPG containing a color image taken at or near the same time as the thermal image. The timestamp encoded in the filename may be different from the thermal timestamp by up to 60 seconds (but typically less than 1 second).
 * `x_pos`/`y_pos`: Location of the hotspot in the thermal image
-* `thumb_*`: Bounding box of the hotspot in the color image. **NOTE**: some of these values are negative, which we are still working to clarify/understand
+* `thumb_*`: Bounding box of the hotspot in the color image. **NOTE**: some of these values are negative, as the bounding box is always 512x512 even if the hotspot is at the edge of the image.
 * `hotspot_type`: "Animal" or "Anomaly"
 * `species_id`: "Bearded Seal", "Ringed Seal", "UNK Seal", "Polar Bear" or "NA" (for anomalies)
 
 ### Raw Hotspot Data
 
-In the `data` directory there is also a `raw.csv` (15,454 records) containing all hotspot detections from the NOAA 2016 survey flights (includes more seals but also more types of animals, more anomalies, hotspots marked as duplicates, etc.). **We do not have the imagery corresponding to all of these hotspots, only about 2.5TB out of 19TB.** We need someone to process this data into a cleaner set containing only non-duplicate hotspots for which we actually have data, and append it to training.csv in the schema of that file.
+In the `data` directory there is also a `raw.csv` (15,454 records) containing all hotspot detections from the NOAA 2016 survey flights (includes more seals but also more types of animals, more anomalies, hotspots marked as duplicates, etc.). **We do not yet have the imagery corresponding to all of these hotspots, only about 2.5TB out of 19TB.**
 
 ## Imagery
 
@@ -59,17 +59,11 @@ Finally, if you want to use [Azure Storage Explorer](https://azure.microsoft.com
 
 ## Code
 
-The project is meant to accomodate many different approaches, frameworks, languages, etc. (though it is somewhat biased towards  Windows to maximize collaboration, since it is likely the lowest common dev machine denominator for all project members - though you're free to check in Mac/Linux specific code if that's how you roll).
-
-### Prerequisites
-
-This section lists the one-time installations of core tools that the project depends on. As you add code that requires certain runtimes or what-not, please add them to this list:
-
-* Node.js (https://nodejs.org/en/)
+The project is meant to accomodate many different approaches, frameworks, languages, etc. Linux is the primary supported dev environment, though some GUI tools are Windows-only.
 
 ### Organization
 
-You are welcome to add whatever code you like to this repo, but please follow these guidelines:
+Hackathon members are welcome to add whatever code you like to this repo, but please follow these guidelines:
 
 * Put your source code in its own directory inside the `src` directory.
 * Add a `README.md` file to your code directory explaining what your code does and how it works.
